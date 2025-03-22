@@ -1,0 +1,90 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Tic-Tac-Toe Game</title>
+        <link rel="stylesheet" href="/css/styles.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+        />
+        <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        />
+    </head>
+    <body>
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-logo">
+                    <a href="/"> <i class="fas fa-gamepad"></i> Tic-Tac-Toe </a>
+                </div>
+                <div class="navbar-menu">
+                    <a href="/" class="nav-item"
+                        ><i class="fas fa-home"></i> Home</a
+                    >
+                    <button id="theme-toggle" class="theme-toggle">
+                        <i class="fas fa-sun"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <h1>Tic-Tac-Toe</h1>
+
+            <div id="game-info" class="info-panel">
+                <p>Game ID: <span th:text="${game.id}"></span></p>
+                <p>
+                    Board Size:
+                    <span
+                        th:text="${game.board.size} + 'x' + ${game.board.size}"
+                    ></span>
+                </p>
+                <p>Strike to Win: <span th:text="${strikeToWin}"></span></p>
+                <p>
+                    Current Turn:
+                    <span th:text="${game.currentPlayer.name}"></span> (<span
+                        th:text="${game.currentPlayer.symbol}"
+                    ></span
+                    >)
+                </p>
+                <p>Game Status: <span th:text="${game.status}"></span></p>
+                <p th:if="${game.winner != null}">
+                    Winner: <span th:text="${game.winner.name}"></span>
+                </p>
+            </div>
+
+            <div
+                id="game-board"
+                th:data-game-id="${game.id}"
+                th:data-board-size="${game.board.size}"
+                th:data-game-status="${game.status}"
+                th:data-winner-name="${game?.winner?.name}"
+            >
+                <div
+                    class="board"
+                    th:style="'grid-template-columns: repeat(' + ${game.board.size} + ', 1fr);'"
+                >
+                    <div
+                        th:each="i : ${#numbers.sequence(0, game.board.size * game.board.size - 1)}"
+                        th:with="row=${i / game.board.size}, col=${i % game.board.size}"
+                        th:attr="data-row=${row}, data-col=${col}"
+                        class="cell"
+                        th:text="${game.board.getCell(row, col)?.value ?: ''}"
+                    ></div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="reset-game" class="btn">Reset Game</button>
+                <a href="/" class="btn">New Game</a>
+            </div>
+        </div>
+
+        <script src="/js/darkmode.js"></script>
+        <script src="/js/game.js"></script>
+    </body>
+</html>
